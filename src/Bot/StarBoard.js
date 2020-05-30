@@ -20,29 +20,24 @@ try {
 }
 
 function login() {
-  if (settings.token) {
   //  console.log(`Logging in with token...`);
-    client.login(settings.token);
-  } else {
-    console.log(
-      "Error logging in: There may be an issue with you settings.json file"
-    );
-  }
+  client.login(process.env.TOKEN);
 }
 
 client.on("ready", () => {
- 
   guildID = settings.serverID;
   smugboardID = settings.channelID;
   loadIntoMemory(client, guildID, smugboardID, settings.fetchLimit);
 
- // client.user.setActivity(`you type...`, { type: "WATCHING" });
+  // client.user.setActivity(`you type...`, { type: "WATCHING" });
 });
 
 // BEGIN STARBOARD CODE
 
 async function loadIntoMemory(client, guildID, channelID, limit) {
-  const channel = client.guilds.cache.get(guildID).channels.cache.get(channelID);
+  const channel = client.guilds.cache
+    .get(guildID)
+    .channels.cache.get(channelID);
   console.log(`Loading ${limit} messages...`);
 
   let messagesLeft = 0;
@@ -133,9 +128,13 @@ client.on("messageReactionAdd", (reaction_orig, user) => {
   const msg = reaction_orig.message;
   const msgID = msg.id;
   const msgChannelID = msg.channel.id;
-  const msgChannel = client.guilds.cache.get(guildID).channels.cache.get(msgChannelID);
+  const msgChannel = client.guilds.cache
+    .get(guildID)
+    .channels.cache.get(msgChannelID);
   const msgLink = `https://discordapp.com/channels/${guildID}/${msgChannelID}/${msgID}`;
-  const channel = client.guilds.cache.get(guildID).channels.cache.get(smugboardID);
+  const channel = client.guilds.cache
+    .get(guildID)
+    .channels.cache.get(smugboardID);
 
   // if message doesnt exist yet in memory, create it
   if (!messagePosted.hasOwnProperty(msgID)) {
